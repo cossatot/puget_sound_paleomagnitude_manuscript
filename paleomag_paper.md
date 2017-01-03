@@ -14,27 +14,27 @@ author:
 # Introduction
 
 A primary objective of paleoseismology is the estimation of the magnitude of
-earthquakes in the geologic record. These paleoearthquakes are typically
-described in a shallow trench excavated across a fault scarp, where the data
-constraining the offset and age of all earthquakes are taken. The magnitude of
-each event is determined by scaling offset measurements from the trench with
-empirical displacement-magnitude relations.
+earthquakes inferred from the geologic record. These paleoearthquakes are
+typically described in a shallow trench excavated across a fault scarp, where
+the data constraining the offset and age of all earthquakes are taken. The
+magnitude of each event is determined by scaling offset measurements from the
+trench with empirical displacement-magnitude relations.
 
 Considerable uncertainty exists in this process: In addition to substantial
 scatter in the displacements magnitude scaling relations (up to xx%), the
 observed offset in or near the trench has its own measurement error, and is
 likely not representative of the mean offset along the paleorupture, simply due
-to the natural variability of earthquake ruptures. This last problem is
-particularly challenging, as it is both hard to accurately address
+to the natural along-strike variability of earthquake ruptures. This last
+problem is particularly challenging, as it is both hard to accurately address
 statistically and can lead to variation in the estimated magnitude of 1-2
-magnitude orders (i.e. M 6-8). *Biasi and Weldon* [*2006*] devised an effective
-solution using Bayesian methods that use a likelihood function derived from
-empirical slip distribution data to reduce the uncertainty in the posterior
-magnitude given a point measurement of displacement.
+magnitude orders (i.e. *M* 6-8). *Biasi and Weldon* [*2006*] devised an
+effective solution with Bayesian methods that use a likelihood function derived
+from empirical slip distribution data to reduce the uncertainty in the
+posterior magnitude given a point measurement of displacement.
 
 Surface rupture length is better correlated with earthquake magnitude than mean
-displacement [e.g., *Wells and Coppersmith, 1994*], and can therefore be used as
-a similar predictor of paleoearthquake magnitude. In fact, independent
+displacement [e.g., *Wells and Coppersmith, 1994*], and can therefore be used
+as a similar predictor of paleoearthquake magnitude. In fact, independent
 measurements of both surface rupture length and displacement can be used to
 estimate paleoearthquake magnitude more accurately and precisely. In this paper
 we provide an implementation as an extension of Biasi and Weldon's
@@ -47,7 +47,7 @@ The Puget Lowland is a low-elevation region in the forearc of the Cascadia
 subduction zone (Figure \ref{pug_map}). Subduction of the Juan de Fuca plate
 here is quite oblique; some *xx* mm a$^{-1}$ of the total 34 +/- xx mm a$^{-1}$
 of plate convergence is right-lateral shear, which manifests as a northward
-component to forearc motion.  The northward velocity of the forearc decreases
+component to forearc motion. The northward velocity of the forearc decreases
 just north of the US-Canada border, causing several mm yr$^{-1}$ of N-S
 shortening across the forearc. An array of east-striking reverse faults,
 NE-striking dextral-reverse faults and NW-striking sinistral-reverse faults
@@ -56,12 +56,22 @@ topographic data.
 
 ![Map of the Puget Lowland. \label{pug_map}](./figures/pug_map_small.pdf)
 
-The retreat of the Pleistocene ice sheets from the region left a 
+Though paleoearthquake scarps are difficult to see from a distance in the
+landscape due to thick vegetation, many scarps are quite evident in LiDAR
+imagery of the region. Most of them cut the 16 ka Vashon Till, which blankets
+the lowland and serves as an important marker unit in paleoseismic trenches.
 
 
-## Data
+## Data 
+
+We have assembled a dataset of 27 paleoearthquakes in the Puget Lowland and
+vicinity [Table X, supplementary materials?]. All of the paleoearthquakes have
+been described in the literature, and offset measurements are taken from those
+sources. Rupture length estimates are taken from mapping on LiDAR data of the
+region assembled by the Puget Sound Lidar Consortium.
 
 ### Offset measurements
+
 
 
 ### Rupture lengths
@@ -95,34 +105,41 @@ Even moderate observed offsets show ratios of offset to maximum rupture length
 that are far higher than that predicted by the empirical scaling relationships
 between mean offset and rupture length [*Wells and Coppersmith, 1994*]. As
 earthquake magnitude is proportional to the product of displacement and length
-[**REF**], predictions of earthquake magnitude based on either rupture length or
-displacement will only be accurate if the length : displacement ratio is typical
-for the data used to construct the scaling. If the ratio is atypical, the use of
-a single datum will bias the predicted earthquake magnitude. 
+[**REF**], predictions of earthquake magnitude based on either rupture length
+or displacement will only be accurate if the length : displacement ratio is
+typical for the data used to construct the scaling. If the ratio is atypical,
+the use of a single datum will bias the predicted earthquake magnitude. 
 
 ## Statistical approach
 
 ### Earthquake magnitude given displacement
 
-We use rupture length information to aid in paleoearthquake magnitude estimation
-by extending the Bayesian magnitude inversion scheme developed by Biasi and
-Weldon (2006). Their method is centered around Bayes' Theorem cast appropriately
-for this problem:
+We use rupture length information to aid in paleoearthquake magnitude
+estimation by extending the Bayesian magnitude inversion scheme developed by
+*Biasi and Weldon* [*2006*]. Their method is centered around Bayes' Theorem cast
+appropriately for this problem:
 $$ p(M|D) = p(M) \,\frac{ p(D|M)}{p(D)}$$ {#eq:bw06}
 where $p(M)$ is the prior probability of the earthquake magnitude $M$, $p(D|M)$
 is the likelihood function, which states the likelihood of observing a
-displacement of size $D$ given an earthquake of magnitude $M$, and $p(D)$ is the
-probability of $D$, which in this case is essentially a normalization constant.
-The solution to the Bayesian inversion is $p(M|D)$, the posterior magnitude
-distribution given the displacement observations.
+displacement of size $D$ given an earthquake of magnitude $M$, and $p(D)$ is
+the probability of $D$, which in this case is essentially a normalization
+constant.  The solution to the Bayesian inversion is $p(M|D)$, the posterior
+magnitude distribution given the displacement observations.
 
 The likelihood function $p(D|M)$ incorporates the intrinsic variability in
 the surface displacements at any point in an earthquake surface rupture. This
 may not be derived simply from first principles (given our current knowledge of
-earthquake physics); instead, *Biasi and Weldon* [*2006*] derived a probability
-function based on a compilation of earthquake slip data 
-
-**Likelihood function also incorporates Wells and Coppersmith scaling**
+earthquake physics). Instead, *Biasi and Weldon* [*2006*] derived a likelihood
+function that incorporates a statistical distribution of normalized surface
+displacements (which we call $p(Dn)$), and a scaling relationship between
+earthquake magnitude $M$ and mean surface displacement. $p(D_n)$ is simply an
+empirical distribution of the frequency or probability of an offset $D$ along
+the length of an individual rupture divided by the mean displacement for that
+event; it was made through compilation of 13 well-mapped ruptures.
+$D_{pred}(M)$ is the predicted mean surface displacement for a given earthquake
+magnitude, in this case from the empirical scaling relationship of *Wells and
+Coppersmith* [*1994*]. The likelihood function $p(D|M)$ is then constructed as
+$$ p(D|M) = p(D_n) / D_{pred}(M) \; .$$ {#eq:pdm}
 
 We follow this approach, with a minor modification of the likelihood function:
 Biasi and Weldon used histograms of the normalized earthquake slip data to
@@ -141,17 +158,13 @@ that incorporates the uncertainty in the offset data.
 
 We extend the Bayeisan framework to include rupture length by creating an
 additional PDF for the earthquake magnitude based on the rupture length. As an
-earthquake has a single rupture length (disregarding epistemic uncertainty), the
-sampling problems relating to a point offset measurement from a continuous
+earthquake has a single rupture length (disregarding epistemic uncertainty),
+the sampling problems relating to a point offset measurement from a continuous
 displacement profile are not encountered here. Therefore, a complex likelihood
 function is not needed, and we simply use an empirical length-magnitude scaling
 relationship to derive magnitude estimates from rupture length:
-$$ p(M|L) = a + b \log_{10}(L) \;, $$ {#eq:ml_scaling}
+$$ p(M|L) = a + b \log_{10}(L) \;, $$ {#eq:ml_scaling} 
 where $a$ and $b$ are constants.
-
-Note that the magnitude estimate $p(M(L))$ is not given as a posterior
-magnitude such as $p(M|D)$. This reflects the nature of the magnitude estimate
-as a simple functional transformation of $L$, rather than a Bayesian inversion. 
 
 However, both the parameters $a$ and $b$ and the length observations $L$ have
 uncertainty. This is also propagated to $p(M(L))$ with Monte Carlo techniques:
@@ -165,9 +178,40 @@ An example of this calculation is show in Figure \ref{example_pdf}.
 ![Schematic showing Eqn @eq:pmdl for an earthquake
 \label{example_pdf}](./figures/pdf_mult.pdf)
 
+## Computation
+
+Code to perform these calculations is incorporated into *Culpable*, an
+open-source Python library for various fault-related calculations [*Styron,
+2016*; https://github.com/cossatot/culpable/]. The paleoearthquake magnitude
+calculations rely heavily on the *NumPy* [*Oliphant, 2007*; *van der Walt et
+al., 2011*], SciPy [*Jones et al., 2011*], and Pandas [*McKinney, 2010*]
+packages.
+
+
 # Results
 
 ## Magnitudes of Puget Lowland paleoearthquakes
 
-Individial paleoearthquakes in the Puget Lowland have magnitudes between 6.4
-and 7.5 (Figure). The uncertainty 
+Individial paleoearthquakes in the Puget Lowland have maximum posterior
+magnitudes between 6.2 and 7.7, given both offset and rupture length data
+(Figures \ref{post_pdfs}, \ref{post_scatter}). 
+
+![Posterior magnitude PDFs for Puget Lowland earthquakes. **a**: $p(M|D)$.
+  **b**: $p(M|D,L)$ \label{post_pdfs}](./figures/posterior_pdfs.pdf)
+
+
+### Effects of length incorporation
+
+Incorporating length into the magnitude inversion reduced both the posterior
+magnitudes and the uncertainty in the magnitudes, dramatically.
+$p(M|D,L)$ was about 0.4 $M$ smaller than $p(M|D)$ on average. 
+
+
+![Scatterplot comparing $p(M|D)$ and $p(M|D,L)$ for each event. Points
+  represent the median for each posterior PDF, and error bars represent the
+  25th and 75th percentiles. Earthquakes that plot below the black dashed line
+  have had posterior magnitudes reduced by the incorporation of length data
+  into the magnitude inversions. \label{post_scatter}
+  ](./figures/posterior_scatter.pdf)
+
+
