@@ -57,7 +57,7 @@ topographic data.
 ![Map of the Puget Lowland. \label{pug_map}](./figures/pug_map_small.pdf)
 
 Though paleoearthquake scarps are difficult to see from a distance in the
-landscape due to thick vegetation, many scarps are quite evident in LiDAR
+landscape due to thick vegetation, many scarps are quite evident in lidar
 imagery of the region. Most of them cut the 16 ka Vashon Till, which blankets
 the lowland and serves as an important marker unit in paleoseismic trenches.
 
@@ -67,11 +67,24 @@ the lowland and serves as an important marker unit in paleoseismic trenches.
 We have assembled a dataset of 27 paleoearthquakes in the Puget Lowland and
 vicinity [Table X, supplementary materials?]. All of the paleoearthquakes have
 been described in the literature, and offset measurements are taken from those
-sources. Rupture length estimates are taken from mapping on LiDAR data of the
+sources. Rupture length estimates are taken from mapping on lidar data of the
 region assembled by the Puget Sound Lidar Consortium.
 
 ### Offset measurements
 
+Offsets were measured in trenches, field surveys, or lidar scarp profiling. 
+Most earthquakes in the dataset had vertical separation given as the component 
+of measured slip, as net offset was not able to be constrained directly. In 
+these instances, vertical separations (with associated uncertainties) were 
+converted to net offsets using the estimated fault dip and rake. Uncertainties 
+in all quantities were treated as uniform distributions and propagated through 
+using Monte Carlo simulations. However, the estimated offset distributions 
+produced from Monte Carlo simulations were not generally uniform because of the 
+nonlinearities in the trigonometric functions used to convert vertical 
+separation to offset.
+
+Measured vertical separations range from 0.5±2.5 m to 7.0±1.0 m, corresponding 
+to ~1-10 m offset. The median offset was 2.1 m. 
 
 
 ### Rupture lengths
@@ -98,7 +111,7 @@ lengths of the faults that host them. East-striking reverse faults, such as the
 Seattle fault zone (SFZ), do not extend into the mountains bounding the eastern
 and western margins of the lowland. However, observed offsets for individual
 events may be quite large: Offsets of up to 8 meters have been measured from
-uplifted shorelines and fault scarps on LiDAR [*Barnett et al., 2015*, *Nelson
+uplifted shorelines and fault scarps on lidar [*Barnett et al., 2015*, *Nelson
 et al., 2016*], though most offset measurements are between 1-2.5 m. 
 
 Even moderate observed offsets show ratios of offset to maximum rupture length
