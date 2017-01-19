@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from collections import OrderedDict
+import json
 
 import pandas as pd
 import numpy as np
@@ -84,16 +85,18 @@ f1, ax1 = plt.subplots(1, figsize=(4,4))
 ax1.plot([6.0, M_max],[6.0, M_max], 'k--', lw=0.5)
 plt.axis('equal')
 
+df_cols = ['pmd_mean', 'pmd_med', 'pmd_25', 'pmd_75',
+           'pmdl_mean', 'pmdl_med', 'pmdl_25', 'pmdl_75']
+
 res_df = pd.DataFrame(data=np.zeros((len(eq_list), 8)),
                       index=[eq.name for eq in eq_list],
-                      columns=['pmd_mean', 'pmd_med', 'pmd_25', 'pmd_75',
-                               'pmdl_mean', 'pmdl_med', 'pmdl_25', 'pmdl_75'])
+                      columns=df_cols)
 
 for i, (eq, pmdl) in enumerate(p_M_DL_dict.items()):
     pmd = list(p_M_D_dict.items())[i][1] 
 
-    ax00.plot(pmd.x, pmd.y)
-    ax01.plot(pmdl.x, pmdl.y)
+    ax00.plot(pmd.x, pmd.y, lw=0.75)
+    ax01.plot(pmdl.x, pmdl.y, lw=0.75)
 
     # scatter plot
     p25d = pmd.x[np.argmin(np.abs(np.cumsum(pmd.y / np.sum(pmd.y))-0.25))]
@@ -110,7 +113,9 @@ for i, (eq, pmdl) in enumerate(p_M_DL_dict.items()):
     ax1.errorbar(p50d, p50dl, 
                  xerr=x_err,
                  yerr=y_err,
+                 lw=0.75,
                  fmt='.',
+
                  )
     # saving quantiles for analysis
     res_df.loc[eq] = (cp.stats.pdf_mean(pmd.x, pmd.y),
@@ -141,5 +146,50 @@ f0.tight_layout(h_pad=0)
 
 f0.savefig('../figures/posterior_pdfs.pdf')
 f1.savefig('../figures/posterior_scatter.pdf')
+
+# Save results to DF for saving, making table in R
+
+eqdf = eq_df[['fault', 'site_name', 'age_MidPt', 'scarp_hgt', 'vert_sep',
+              'vert_sep_err', 'offset', 'offset_err', 'dip', 'dip_err',
+              'strike', 'strike_err', 'rake', 'rake_err', 'time_pdf_name']]
+
+eqdf['M_mean'] = res_df.pmdl_mean.values
+eqdf.to_csv('../results/eq_table.csv', index=False)
+
+# subsampled results for saving and plotting to table
+
+
+sns.set_style("whitegrid")
+sns.despine()
+f2, axs = plt.subplots(len(eq_list)+1, figsize=(6,10), sharex=True)
+
+axs[0].axis('off')
+axs[0].annotate('Earthquake Name', xy=(1.02, 0.4), 
+                xycoords='axes fraction',
+                fontweight='bold',
+                )
+
+axs[0].annotate('p(M|D)', xy=(0.4, 0.4), 
+                xycoords='axes fraction',
+                fontweight='bold',
+                )
+
+for i, (eq, pmdl) in enumerate(p_M_DL_dict.items()):
+
+    pmd = list(p_M_D_dict.items())[i][1] 
+
+    i += 1
+    axs[i].plot(pmdl.x, pmdl.y)
+    axs[i].plot(pmd.x, pmd.y, lw=1., linestyle='--')
+
+    axs[i].set_yticks([])
+
+    axs[i].annotate(eq, xy=(1.02, 0.4), xycoords='axes fraction')
+
+axs[-1].set_xlabel('Moment Magnitude')
+
+f2.subplots_adjust(hspace=0, left=0.02, right=0.6, top=0.98, bottom=0.05)
+
+f2.savefig('../figures/post_magnitude_stack.pdf')
 
 plt.show()
