@@ -20,9 +20,48 @@ n_iters = 1000  # number of monte carlo iterations
 
 # load earthquake data
 
-# rupture offsets and fault geometry
-eq_df = pd.read_excel('../data/eq_ages_offsets.xlsx', skiprows=[1])
+with open('../gis/puget_lowland_ruptures.geojson', 'r') as f:
+    r = json.load(f)
 
+rs = r['features']
+
+eq_names = list(set(rr['properties']['event'] for rr in rs))
+
+eq_df = pd.DataFrame(index=eq_names, 
+                     columns=['fault', 'offset', 'offset_err',
+                              'vert_sep', 'vert_sep_err', 'dip', 'dip_err',
+                              'rake', 'rake_err', 'min_length', 'max_length'])
+
+def ruptures_to_row(row, ruptures=rs):
+    r_name = row.name
+
+    vals = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    cols = ['fault', 'offset', 'offset_err', 'vert_sep', 'vert_sep_err', 'dip',
+            'dip_err', 'rake', 'rake_err', 'length']
+
+    for rr in ruptures:
+        if rr['properties']['rupture_name'] == r_name + '_min':
+
+            for i, col in enumerate(cols[:-2]):
+                try:
+                    vals[i] = rr['properties'][col]
+                except KeyError:
+                    vals[i] = np.nan
+
+            vals[9] = rr['properties']['length']
+
+        elif rr['properties']['rupture_name'] == r_name + '_max':
+            vals[10] = rr['properties']['length']
+
+    return vals
+
+
+for i, eq in enumerate(eq_names):
+    eq_df.iloc[i] = ruptures_to_row(eq_df.iloc[i])
+
+
+# Process earthquake data to Pandas DataFrame
 
 def row_to_om(row):
 
@@ -35,7 +74,7 @@ def row_to_om(row):
         m_off_err = row['offset_err']
         m_comp = 'offset'
 
-    om = cp.OffsetMarker(name=str(row['time_pdf_name']),
+    om = cp.OffsetMarker(name=str(row.name),
                          measured_offset=m_off,
                          measured_offset_err=m_off_err,
                          measured_offset_component=m_comp,
@@ -51,14 +90,12 @@ def row_to_om(row):
 
 eq_list = [row_to_om(row) for i, row in eq_df.iterrows()]
 
-# load rupture length spreadsheet
-len_df = pd.read_excel('../data/puget_lowland_rupture_lengths.xlsx')
-
 len_d = {}
 
-for i, row in len_df.iterrows():
-    len_d[row['earthquake']] = np.random.uniform(row['min_length'],
-                                                 row['max_length'], n_iters)
+for i, row in eq_df.iterrows():
+    len_d[row.name] = np.random.uniform(row['min_length'],
+                                        row['max_length'], n_iters)
+
 
 # set magnitude prior p(M)
 M_min = 5.5
@@ -149,12 +186,12 @@ f1.savefig('../figures/posterior_scatter.pdf')
 
 # Save results to DF for saving, making table in R
 
-eqdf = eq_df[['fault', 'site_name', 'age_MidPt', 'scarp_hgt', 'vert_sep',
-              'vert_sep_err', 'offset', 'offset_err', 'dip', 'dip_err',
-              'strike', 'strike_err', 'rake', 'rake_err', 'time_pdf_name']]
+#eqdf = eq_df[['fault', 'site_name', 'age_MidPt', 'scarp_hgt', 'vert_sep',
+#              'vert_sep_err', 'offset', 'offset_err', 'dip', 'dip_err',
+#              'strike', 'strike_err', 'rake', 'rake_err', 'time_pdf_name']]
 
-eqdf['M_mean'] = res_df.pmdl_mean.values
-eqdf.to_csv('../results/eq_table.csv', index=False)
+eq_df['M_mean'] = res_df.pmdl_mean.values
+eq_df.to_csv('../results/eq_table.csv', index=False)
 
 # subsampled results for saving and plotting to table
 
