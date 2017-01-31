@@ -47,7 +47,8 @@ earthquakes inferred from the geologic record. These paleoearthquakes are
 typically described in a shallow trench excavated across a fault scarp, where
 the data constraining the offset and age of any inferred earthquakes are taken.
 The magnitude of each event is then determined by scaling offset measurements
-from the trench with empirical displacement-magnitude relations.
+from the trench with empirical displacement-magnitude relations, such as those
+by *Wells and Coppersmith* [*1994*].
 
 Considerable uncertainty exists in this process: In addition to 
 scatter in the data used to create the displacement-magnitude scaling
@@ -89,7 +90,11 @@ NE-striking dextral-reverse faults and NW-striking sinistral-reverse faults
 cutting the Puget Lowland are mapped based on geologic, geophysical and
 topographic data.
 
-![Map of the Puget Lowland. \label{pug_map}](./figures/pug_map_small.pdf)
+![Map of the Puget Lowland. Paleoseismic sites are shown as white dots.
+Ruptures studied here are shown in pink and blue; pink represents the maximum
+possible length of each earthquake, and blue represents the minimum. Additional
+fault in black are from the USGS Quaternary Fault and Fold database
+\label{pug_map}](./figures/pug_map_small.pdf)
 
 Though paleoearthquake scarps are difficult to see from a distance in the
 landscape due to thick vegetation, many scarps are quite evident in lidar
@@ -106,8 +111,9 @@ earthquakes.
 We have assembled a dataset of 27 paleoearthquakes in the Puget Lowland and
 vicinity [Table X, supplementary materials?]. All of the paleoearthquakes have
 been described in the literature, and offset measurements are taken from those
-sources. Rupture length estimates are taken from mapping on lidar data of the
-region assembled by the Puget Sound Lidar Consortium.
+sources. Rupture length estimates are taken from the literature, supplemented
+by mapping on lidar data of the region assembled by the Puget Sound Lidar
+Consortium.
 
 ### Offset measurements
 
@@ -143,8 +149,9 @@ paleoseismic trenches in which the earthquakes are observed, or the lengths of
 clear ruptures in the topographic data.
 
 The discrepancies between the minimum and maximum rupture lengths are very
-large: $L_{\min}$ ranges from 1.6 to 33 km (median 4.4 km), while $L_{\max}$
-ranges from 6 to 123 km. The median $L_{\max}:L_{\min}$ ratio is 10.
+large: $L_{\min}$ ranges from 2 to 33 km (median 4 km), while $L_{\max}$ ranges
+from 6 to 186 km (median 53 km). The median $L_{\max}:L_{\min}$ ratio is 11.8,
+and the mean is 13.8.
 
 
 ### Length-offset scaling
@@ -158,16 +165,25 @@ uplifted shorelines and fault scarps on lidar [*Sherrod et al., 2000*; *Nelson
 et al., 2014*; *Barnett et al., 2015*], though most offset measurements are
 between 1-2.5 m. 
 
+![Length-offset scaling for Puget Lowland earthquakes and scaling
+relationships. WC94 = scaling of *Wells and Coppersmith* [*1994*] for all
+earthquakes. W08 = scaling of *Wesnousky* [*2008*] for continental reverse
+faults. \label{ld_scaling}](./figures/l_d_scaling.pdf)
+
 Even moderate observed offsets show ratios of offset to maximum rupture length
 that are far higher than that predicted by the empirical scaling relationships
-between mean offset and rupture length [*Wells and Coppersmith, 1994*], though
-this may be common for continental reverse fault ruptures [*Wesnousky, 2008*].
-As earthquake magnitude is proportional to the product of displacement and
-length [*Aki and Richards, 1980*], predictions of earthquake magnitude based on
-either rupture length or displacement will only be accurate if the length to
-displacement ratio is typical for the data used to construct the scaling. If
-the ratio is atypical, the use of a single data type will bias the predicted
-earthquake magnitude. 
+between mean offset and rupture length (Figure \ref{ld_scaling} [e.g., *Wells
+and Coppersmith, 1994*], though the scaling is typical for continental reverse
+fault ruptures [*Wesnousky, 2008*], despite many of these ruptures being
+oblique-slip. As earthquake magnitude is proportional to the product of
+displacement and length [*Aki and Richards, 1980*], predictions of earthquake
+magnitude based on either rupture length or displacement will only be accurate
+if the length to displacement ratio is typical for the data used to construct
+the scaling. If the ratio is atypical, the use of a single data type will bias
+the predicted earthquake magnitude.
+
+
+
 
 # Paleoearthquake magnitude inversion
 
@@ -192,13 +208,13 @@ earthquake physics). Instead, *Biasi and Weldon* [*2006*] derived a likelihood
 function that incorporates a statistical distribution of normalized surface
 displacements (which we call $p(D_n)$), and a scaling relationship between
 earthquake magnitude $M$ and mean surface displacement. $p(D_n)$ is simply an
-empirical distribution of the frequency (or probability) of an offset $D$ along
-the length of an individual rupture divided by the mean displacement for that
-event; it was made through compilation of 13 well-mapped ruptures.
-$D_{pred}(M)$ is the predicted mean surface displacement for a given earthquake
-magnitude, in this case from the empirical scaling relationship of *Wells and
-Coppersmith* [*1994*]. The likelihood function $p(D|M)$ is then constructed as
-$$ p(D|M) = p(D_n) / D_{pred}(M) \; .$$ {#eq:pdm}
+empirical distribution of the frequency (or probability) of an offset $D$ 
+occurring anywhere along the length of an individual rupture divided by the 
+mean displacement for that event; it was made through compilation of 13 
+well-mapped ruptures. $D_{pred}(M)$ is the predicted mean surface displacement 
+for a given earthquake magnitude, in this case from the empirical scaling 
+relationship of *Wells and Coppersmith* [*1994*]. The likelihood function
+$p(D|M)$ is then constructed as $$ p(D|M) = p(D_n) / D_{pred}(M)\;.$$ {#eq:pdm}
 
 We follow this approach, with a minor modification of the likelihood function:
 *Biasi and Weldon* used histograms of the normalized earthquake slip data to
@@ -216,7 +232,7 @@ that incorporates the uncertainty in the offset data.
 
 ## Length incorporation
 
-We extend the Bayeisan framework to include rupture length by creating an
+We extend the Bayesian framework to include rupture length by creating an
 additional likelihood function for the earthquake magnitude based on the
 rupture length. As an earthquake has a single rupture length (disregarding
 epistemic uncertainty), the sampling problems relating to a point offset
@@ -236,7 +252,8 @@ with their standard errors. This results in a set of $n$ samples of $M$, which
 are then converted to the likelihood function $p(L|M)$ through a kernel density
 estimation.
 
-We then use $p(L|M)$ in the modified relation 
+We then use $p(L|M)$ to recover the postererior magnitude $p(M|D,L)$ with the 
+equation
 $$ p(M|D,L) = p(M) \, p(L|M)\, \frac{p(D|M)}{p(D)} \; .$$ {#eq:pmdl} 
 An example of this calculation is show in Figure \ref{example_pdf}. 
 
@@ -249,8 +266,9 @@ Code to perform these calculations is incorporated into *culpable*, an
 open-source Python library for various fault-related calculations [*Styron,
 2016*; https://github.com/cossatot/culpable/]. The paleoearthquake magnitude
 calculations rely heavily on the *NumPy* [*Oliphant, 2007*; *van der Walt et
-al., 2011*], SciPy [*Jones et al., 2011*], and Pandas [*McKinney, 2010*]
-packages.
+al., 2011*], SciPy [*Jones et al., 2011*], and *Pandas* [*McKinney, 2010*]
+packages. A script used to calculate $p(M|D,L)$ for all events in this work is
+included in the supplementary information.
 
 
 # Results
@@ -260,7 +278,7 @@ packages.
 Individial paleoearthquakes in the Puget Lowland have maximum posterior
 magnitudes between 6.2 and 7.7, given both offset and rupture length data
 (Figures \ref{post_pdfs}, \ref{post_scatter}). In general, the larger
-earthquakes are less frequent, although there are relatively few earthquakes
+earthquakes are less common, although there are relatively few earthquakes
 below $M$ 6.5, consistent with previous observations that $M$ 6.5 and smaller
 events frequently do not break the surface [e.g., *Fialko et al., 2005*].
 
@@ -275,35 +293,42 @@ the posterior magnitudes and the uncertainty in the magnitudes. $p(M|D,L)$ was
 about 0.4 $M$ smaller than $p(M|D)$ for the same event, on average. The
 uncertainty in each estimate is fairly represented by the interquartile range
 (IQR, the distance between the 25th and 75th percentiles); the IQR of $p(M|D)$
-is, on average, twice the IQR of $p(M|D,L)$ for a given earthquake.
+is, on average, twice the IQR of $p(M|D,L)$ for a given earthquake (Figure
+\ref{post_scatter}).
 
-Additionally, the characteristic shape of the $p(M|D)$ PDF has a right skew,
-with a long, high-$M$ tail, though $p(M|D,L)$ is more symmetrical. In this
-analysis, $p(M)$ extended to $M$ 8.5, and $p(M|D)$ for several events are
-non-negligibly truncated at this limit. However, for no events did $p(M|D,L)$
-reach 8.0. This is an effect of limiting the rupture length, and given the
-geological controls on fault dimensions, this is highly unlikely to be simply
-an underestimation of the possible rupture dimensions, as could be the case for
-a 1000 km long strike-slip fault. 
+Additionally, the characteristic shape of the $p(M|D)$ PDF has a right skew
+(Figure \ref{post_pdfs}a), with a long, high-$M$ tail (relating to the
+possibility that the offset measurement occurred on a section of rupture with
+an offset distance much lower than the mean offset), though $p(M|D,L)$ is more
+symmetrical (Figure \ref{post_pdfs}b). In this analysis, $p(M)$ extended to $M$
+8.5, and $p(M|D)$ for several events are non-negligibly truncated at this
+limit. However, for no events did $p(M|D,L)$ reach 8.0. This is an effect of
+limiting the rupture length, and given the geological controls on fault
+dimensions, this is highly unlikely to be simply an underestimation of the
+possible rupture dimensions, as could be the case for a 1000 km long
+strike-slip fault. 
 
 The only instance in which we feel that rupture could be longer than our
 maximum is if the Saddle Mountains and Seattle Fault Zone ruptured in a single
 event. This is possible given the estimated timing of the paleoearthquakes: the
-Restoration Point earthquake occurred ca. 1050-1020 calendar years before 1950,
-the Saddle Mountains East fault ruptured between 1160-310 cal. yr. BP, and the
-Saddle Mountains West fault ruptured between 1200-970 cal. yr. BP [**REFS**]
-(these Saddle Mountains ruptures are considered the same event in this work).
-These faults have geometries and kinematics that are not incompatible: The SMF
-strikes ~60° and is reverse-dextral while the SFZ strikes ~90° and is reverse.
-These faults have not been demonstrated to link at depth, though this has been
-suggested [*Blakely et al., 2009*]. Furthermore, both of these events show much
-larger offsets than the rest in our dataset: a mean of 10.2 m on the SFZ and
-6.7 m on the SMF. Simultaneous rupture of > 5 m on separate faults with such
-different strikes and rakes have not been observed, although the 2008 Wenchuan,
-China and 2016 Kaikoura, New Zealand earthquakes, both $M$ ~7.9, are close
-enough to demonstrate the possibility. The total rupture length of this event
-would be ~70-150 km, and cursory analysis indicates a most-likely magnitude of
-7.8, though the PDF extends to $M$ 8.3.
+Restoration Point earthquake occurred about 1050-1020 calendar years BP (before
+1950), the Saddle Mountains East fault ruptured between 1160-310 cal. yr. BP,
+and the Saddle Mountains West fault ruptured between 1200-970 cal. yr. BP
+[*Sherrod et al., 2000*, *Nelson et al., 2003*, *Witter et al., 2008*, *Barnett
+et al., 2015*] (these Saddle Mountains ruptures are considered the same event
+in this work). These faults have geometries and kinematics that are not
+incompatible: The SMF strikes ~60° and is reverse-dextral while the SFZ strikes
+~90° and is reverse. These faults have not been demonstrated to link at depth,
+though this has been suggested by *Blakely et al.* [*2009*] based on
+interpretation of geological and geophysical data. Furthermore, both of these
+events show much larger offsets than the rest in our dataset: a mean of 10.2 m
+on the SFZ and 6.7 m on the SMF. Simultaneous rupture of > 5 m on separate
+faults with such different strikes and rakes have not been observed, although
+the 2008 Wenchuan, China [*Zhang et al., 2011*] and 2016 Kaikoura, New Zealand
+earthquakes, both $M$ ~7.9, are close enough to demonstrate the possibility.
+The total rupture length of this event would be ~70-150 km, and cursory
+analysis indicates a most-likely magnitude of 7.8, though the PDF extends to
+$M$ 8.3.
 
 
 ![Scatterplot comparing $p(M|D)$ and $p(M|D,L)$ for each event. Points
@@ -327,12 +352,12 @@ the long, high-$M$ tails of $p(M|D)$---are greater than the reduction in mean
 or median posterior magnitude, and represent a greater increase in estimated
 seismic safety. 
 
-However, the earthquakes studied here, though representing a 
-mostly-complete record of surface-breaking earthquakes in the Puget Lowland, 
-are far from the only source of regional seismic hazard, as the area is above 
-the Cascadia subduction zone. The reduction in earthquake magnitude and hazard 
-given here only concerns these shallow, upper-plate events and does not reduce 
-the hazard from Cascadia at all.
+However, the earthquakes studied here, though representing a mostly-complete
+record of surface-breaking earthquakes in the Puget Lowland, are far from the
+only source of regional seismic hazard, as the area is above the Cascadia
+subduction zone. The reduction in earthquake magnitude and hazard given here
+only concerns these shallow, upper-plate events and does not reduce the hazard
+from Cascadia at all.
 
 Furthermore, though our results indicate a decrease in estimated magnitude for
 the earthquakes studied relative to estimates only incorporating offset data,
@@ -344,7 +369,93 @@ unreinforced masonry buildings. A repeat of this event would devastate Seattle.
 
 # Conclusions
 
-
-
+The incorporation of earthquake rupture lengths into magnitude estimates for 27
+paleoearthquakes in the Puget Lowland region of Washington increases the
+precision and decreases the magnitudes of the posterior magntude estimates
+$p(M|D,L)$ relative to $p(M,D)$, which only incorporates offset measurements,
+in spite of the factor of 10 uncertainty in the length estimates. This is
+largely because the rupture lengths are quite short relative to the offsets.
+These improved posteriors reduce both the uncertainty and hazard of earthquakes
+in the region.
 
 # References
+
+Barnett, E. A., Sherrod, B. L., Hughes, J. F., Kelsey, H. M., Czajkowski, J.
+L., Walsh, T. J., ... & Carson, R. J. (2015). Paleoseismic Evidence for Late
+Holocene Tectonic Deformation along the Saddle Mountain Fault Zone,
+Southeastern Olympic Peninsula, Washington. *Bulletin of the Seismological
+Society of America, 105*(1), 38-71.
+
+Biasi, G. P., & Weldon, R. J. (2006). Estimating surface rupture length and
+magnitude of paleoearthquakes from point measurements of rupture displacement.
+*Bulletin of the Seismological Society of America, 96*(5), 1612-1623.
+
+Blakely, R. J., Sherrod, B. L., Hughes, J. F., Anderson, M. L., Wells, R. E., &
+Weaver, C. S. (2009). Saddle Mountain fault deformation zone, Olympic
+Peninsula, Washington: Western boundary of the Seattle uplift. *Geosphere,
+5*(2), 105-125.
+
+Fialko, Y., Sandwell, D., Simons, M., & Rosen, P. (2005). Three-dimensional
+deformation caused by the Bam, Iran, earthquake and the origin of shallow slip
+deficit. *Nature, 435*(7040), 295-299.
+
+Hemphill-Haley, M. A., & Weldon, R. J. (1999). Estimating prehistoric
+earthquake magnitude from point measurements of surface rupture. *Bulletin of
+the Seismological Society of America, 89*(5), 1264-1279.
+
+Jones E, Oliphant E, Peterson P, et al. SciPy: Open Source Scientific Tools for
+Python, 2001-, http://www.scipy.org/ [Online; accessed 2017-01-31].
+
+Mazzotti, S., Dragert, H., Hyndman, R. D., Miller, M. M., & Henton, J. A.
+(2002). GPS deformation in a region of high crustal seismicity: N. Cascadia
+forearc. *Earth and Planetary Science Letters, 198*(1), 41-48.
+
+McKinney, W. (2010), Data structures for statistical computing in Python, in
+*Proceedings of the 9th Python in Science Conference*, edited by S. van der
+Walt and J. Millman, pp. 51–56, SciPy, Austin, Tex.
+
+Nelson, A. R., Johnson, S. Y., Kelsey, H. M., Wells, R. E., Sherrod, B. L.,
+Pezzopane, S. K., ... & Bucknam, R. C. (2003). Late Holocene earthquakes on the
+Toe Jam Hill fault, Seattle fault zone, Bainbridge Island, Washington.
+*Geological Society of America Bulletin, 115*(11), 1388-1403.
+
+Nelson, A. R., Personius, S. F., Sherrod, B. L., Kelsey, H. M., Johnson, S. Y.,
+Bradley, L. A., & Wells, R. E. (2014). Diverse rupture modes for
+surface-deforming upper plate earthquakes in the southern Puget Lowland of
+Washington State. *Geosphere*, GES00967-1.
+
+Oliphant, T. E. (2007), Python for scientific computing, *Comput. Sci. Eng.,
+9*(3), 10–20.
+
+Sherrod, B. L., Bucknam, R. C., & Leopold, E. B. (2000). Holocene relative sea
+level changes along the Seattle Fault at Restoration Point, Washington.
+*Quaternary Research, 54*(3), 384-393.
+
+Styron, R.S. (2016). culpable v. 0.1 [Software code]. Zenodo.
+https://doi.org/xxx
+
+Walt, S. V. D., Colbert, S. C., & Varoquaux, G. (2011). The NumPy array: a
+structure for efficient numerical computation. *Computing in Science &
+Engineering, 13*(2), 22-30.
+
+Wells, D. L., & Coppersmith, K. J. (1994). New empirical relationships among
+magnitude, rupture length, rupture width, rupture area, and surface
+displacement. *Bulletin of the Seismological Society of America, 84*(4),
+974-1002.
+
+Witter, R. C., Givler, R. W., & Carson, R. J. (2008). Two post-glacial
+earthquakes on the Saddle Mountain West fault, southeastern Olympic Peninsula,
+Washington. *Bulletin of the Seismological Society of America, 98*(6),
+2894-2917.
+
+Zhang, G., Qu, C., Shan, X., Song, X., Zhang, G., Wang, C., ... & Wang, R.
+(2011). Slip distribution of the 2008 Wenchuan Ms 7.9 earthquake by joint
+inversion from GPS and InSAR measurements: a resolution test study.
+*Geophysical Journal International, 186*(1), 207-220.
+
+
+# Supplemental figures
+
+![$p(M|D,L)$ (blue lines) and $(p(M|D)$ (green dashed lines) for all events,
+  with their unique event name. \label{all_pms}
+  ](./figures/post_magnitude_stack.pdf)

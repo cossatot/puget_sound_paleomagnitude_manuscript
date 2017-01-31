@@ -186,19 +186,47 @@ f1.savefig('../figures/posterior_scatter.pdf')
 
 # Save results to DF for saving, making table in R
 
-#eqdf = eq_df[['fault', 'site_name', 'age_MidPt', 'scarp_hgt', 'vert_sep',
-#              'vert_sep_err', 'offset', 'offset_err', 'dip', 'dip_err',
-#              'strike', 'strike_err', 'rake', 'rake_err', 'time_pdf_name']]
-
 eq_df['M_mean'] = res_df.pmdl_mean.values
 eq_df.to_csv('../results/eq_table.csv', index=False)
 
-# subsampled results for saving and plotting to table
+# Slip vs. length scaling
+def D_from_L_w08(L):
+    return 0.06 * L
+
+def D_from_L_wc94(L):
+    return np.float_(10**(- 1.43 + 0.88 * np.log10(L)))
+
+f2, ax2 = plt.subplots(1, figsize=(4,4))
+
+ll = np.array([0.01, 200.])
+
+off_mean = [np.abs(eq.sample_offsets(n_iters).mean()) for eq in eq_list]
+off_err = [off_mean[i] - np.abs(eq.sample_offsets(n_iters).min()) 
+           for i, eq in enumerate(eq_list)]
+
+l_mean = eq_df[['min_length', 'max_length']].mean(axis=1)
+l_err = l_mean - eq_df.min_length
 
 
+for i in range(len(eq_list)):
+    ax2.errorbar(l_mean.iloc[i], off_mean[i], 
+                 yerr=off_err[i], xerr=l_err.iloc[i],
+                 lw=0.5, fmt='.')
+
+ax2.plot(ll, D_from_L_wc94(ll), 'k:', lw=0.5, label='WC94')
+ax2.plot(ll, D_from_L_w08(ll), 'k--', lw=0.5, label='W08')
+plt.xlabel('Rupture Length (km)')
+plt.ylabel('Rupture Offset (m)')
+plt.legend(loc='lower right')
+f2.subplots_adjust(bottom=0.12)
+
+f2.savefig('../figures/l_d_scaling.pdf')
+
+
+# Magnitude PDFs for each earthquake
 sns.set_style("whitegrid")
 sns.despine()
-f2, axs = plt.subplots(len(eq_list)+1, figsize=(6,10), sharex=True)
+f3, axs = plt.subplots(len(eq_list)+1, figsize=(6,10), sharex=True)
 
 axs[0].axis('off')
 axs[0].annotate('Earthquake Name', xy=(1.02, 0.4), 
@@ -225,8 +253,11 @@ for i, (eq, pmdl) in enumerate(p_M_DL_dict.items()):
 
 axs[-1].set_xlabel('Moment Magnitude')
 
-f2.subplots_adjust(hspace=0, left=0.02, right=0.6, top=0.98, bottom=0.05)
+f3.subplots_adjust(hspace=0, left=0.02, right=0.6, top=0.98, bottom=0.05)
 
-f2.savefig('../figures/post_magnitude_stack.pdf')
+f3.savefig('../figures/post_magnitude_stack.pdf')
 
 plt.show()
+
+
+
