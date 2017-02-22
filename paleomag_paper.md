@@ -5,7 +5,7 @@ length information: application to the Puget Lowland, WA USA"
 author:
 - name:  Richard Styron
   affiliation:  Earth Analysis 
-  email: Richard.h.styron@gmail.com
+  email: richard.h.styron@gmail.com
 
 - name: Brian Sherrod
   affiliation: US Geological Survey 

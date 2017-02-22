@@ -43,7 +43,7 @@ def ruptures_to_row(row, ruptures=rs):
     for rr in ruptures:
         if rr['properties']['rupture_name'] == r_name + '_min':
 
-            for i, col in enumerate(cols[:-2]):
+            for i, col in enumerate(cols[:-1]):
                 try:
                     vals[i] = rr['properties'][col]
                 except KeyError:
@@ -184,9 +184,10 @@ f0.tight_layout(h_pad=0)
 f0.savefig('../figures/posterior_pdfs.pdf')
 f1.savefig('../figures/posterior_scatter.pdf')
 
-# Save results to DF for saving, making table in R
+# Save results to DF
 
 eq_df['M_mean'] = res_df.pmdl_mean.values
+eq_df = eq_df.sort_values('M_mean', ascending=False)
 eq_df.to_csv('../results/eq_table.csv', index=False)
 
 # Slip vs. length scaling
@@ -239,17 +240,21 @@ axs[0].annotate('p(M|D)', xy=(0.4, 0.4),
                 fontweight='bold',
                 )
 
+M_sort = np.argsort(eq_df.M_mean.values)
+
 for i, (eq, pmdl) in enumerate(p_M_DL_dict.items()):
 
-    pmd = list(p_M_D_dict.items())[i][1] 
+    pmd = list(p_M_D_dict.items())[i][1]
 
-    i += 1
-    axs[i].plot(pmdl.x, pmdl.y)
-    axs[i].plot(pmd.x, pmd.y, lw=1., linestyle='--')
+    axs_i = eq_df.index[M_sort][::-1].tolist().index(eq) +1
 
-    axs[i].set_yticks([])
+    #i += 1
+    axs[axs_i].plot(pmdl.x, pmdl.y)
+    axs[axs_i].plot(pmd.x, pmd.y, lw=1.5, linestyle='--')
 
-    axs[i].annotate(eq, xy=(1.02, 0.4), xycoords='axes fraction')
+    axs[axs_i].set_yticks([])
+
+    axs[axs_i].annotate(eq, xy=(1.02, 0.4), xycoords='axes fraction')
 
 axs[-1].set_xlabel('Moment Magnitude')
 
