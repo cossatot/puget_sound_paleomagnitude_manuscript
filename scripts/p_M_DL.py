@@ -185,10 +185,13 @@ f0.savefig('../figures/posterior_pdfs.pdf')
 f1.savefig('../figures/posterior_scatter.pdf')
 
 # Save results to DF
-
 eq_df['M_mean'] = res_df.pmdl_mean.values
 eq_df = eq_df.sort_values('M_mean', ascending=False)
+eq_df['eq_name'] = list(eq_df.index)
 eq_df.to_csv('../results/eq_table.csv', index=False)
+
+
+
 
 # Slip vs. length scaling
 def D_from_L_w08(L):
