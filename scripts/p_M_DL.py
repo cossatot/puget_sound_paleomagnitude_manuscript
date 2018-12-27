@@ -34,12 +34,13 @@ eq_names = sorted(list(set(rr['properties']['event'] for rr in rs)))
 eq_df = pd.DataFrame(index=eq_names, 
                      columns=['fault', 'offset', 'offset_err',
                               'vert_sep', 'vert_sep_err', 'dip', 'dip_err',
-                              'rake', 'rake_err', 'min_length', 'max_length'])
+                              'rake', 'rake_err', 'min_length', 'max_length',
+                              'reference'])
 
 def ruptures_to_row(row, ruptures=rs):
     r_name = row.name
 
-    vals = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    vals = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
     cols = ['fault', 'offset', 'offset_err', 'vert_sep', 'vert_sep_err', 'dip',
             'dip_err', 'rake', 'rake_err', 'length']
@@ -47,13 +48,14 @@ def ruptures_to_row(row, ruptures=rs):
     for rr in ruptures:
         if rr['properties']['rupture_name'] == r_name + '_min':
 
-            for i, col in enumerate(cols[:-1]):
+            for i, col in enumerate(cols[:-2]):
                 try:
                     vals[i] = rr['properties'][col]
                 except KeyError:
                     vals[i] = np.nan
 
             vals[9] = rr['properties']['length']
+            vals[11] = rr['properties']['Reference']
 
         elif rr['properties']['rupture_name'] == r_name + '_max':
             vals[10] = rr['properties']['length']
@@ -114,11 +116,21 @@ p_M = cp.magnitudes.make_p_M(p_M_type='uniform',
 # do inversion
 p_M_D_dict = OrderedDict()
 p_M_DL_dict = OrderedDict()
+p_M_L_dict = OrderedDict()
 
 for eq in eq_list:
     offs = eq.sample_offsets(n_iters)
-    p_M_DL_dict[eq.name] = cp.magnitudes.p_M_DL(offs, len_d[eq.name], p_M)
-    p_M_D_dict[eq.name] = cp.magnitudes.p_M_D(offs, p_M)
+    p_M_DL_dict[eq.name] = cp.magnitudes.p_M_DL(offs, len_d[eq.name], p_M,
+                                                D_ref='BW_2006',
+                                                L_ref='Stirling_2002_instr',
+                                                sample_bias_corr=True)
+
+    p_M_D_dict[eq.name] = cp.magnitudes.p_M_D(offs, p_M,
+                                              ref='BW_2006')
+
+    p_M_L_dict[eq.name] = cp.magnitudes.p_M_L(len_d[eq.name], p_M,
+                                              ref='Stirling_2002_instr')
+
 
 
 # plotting
@@ -135,6 +147,10 @@ res_df = pd.DataFrame(data=np.zeros((len(eq_list), 8)),
                       index=[eq.name for eq in eq_list],
                       columns=df_cols)
 
+
+eq_pmdl_pct_table = pd.DataFrame(index=p_M_DL_dict.keys(),
+                                 columns=['5', '25', '50', '75', '95'])
+
 for i, (eq, pmdl) in enumerate(p_M_DL_dict.items()):
     pmd = list(p_M_D_dict.items())[i][1] 
 
@@ -146,9 +162,11 @@ for i, (eq, pmdl) in enumerate(p_M_DL_dict.items()):
     p50d = pmd.x[np.argmin(np.abs(np.cumsum(pmd.y / np.sum(pmd.y))-0.50))]
     p75d = pmd.x[np.argmin(np.abs(np.cumsum(pmd.y / np.sum(pmd.y))-0.75))]
     
+    p05dl = pmdl.x[np.argmin(np.abs(np.cumsum(pmdl.y / np.sum(pmdl.y))-0.05))]
     p25dl = pmdl.x[np.argmin(np.abs(np.cumsum(pmdl.y / np.sum(pmdl.y))-0.25))]
     p50dl = pmdl.x[np.argmin(np.abs(np.cumsum(pmdl.y / np.sum(pmdl.y))-0.50))]
     p75dl = pmdl.x[np.argmin(np.abs(np.cumsum(pmdl.y / np.sum(pmdl.y))-0.75))]
+    p95dl = pmdl.x[np.argmin(np.abs(np.cumsum(pmdl.y / np.sum(pmdl.y))-0.95))]
     
     y_err = np.array([[p50dl-p25dl, p75dl-p50dl]]).T
     x_err = np.array([[p50d-p25d, p75d-p50d]]).T
@@ -165,6 +183,7 @@ for i, (eq, pmdl) in enumerate(p_M_DL_dict.items()):
                       p50d, p25d, p75d,
                       cp.stats.pdf_mean(pmdl.x, pmdl.y),
                       p50dl, p25dl, p75dl)
+    eq_pmdl_pct_table.loc[eq] = (p05dl, p25dl, p50dl, p75dl, p95dl)
 
 
 ax00.set_xlim([M_min, M_max])
@@ -197,8 +216,7 @@ eq_df['eq_name'] = list(eq_df.index)
 
 if save_results:
     eq_df.to_csv('../results/eq_table.csv', index=False)
-
-
+    eq_pmdl_pct_table.to_csv('../results/pmdl_pctiles_table.csv')
 
 
 # Slip vs. length scaling
@@ -247,7 +265,7 @@ axs[0].annotate('Earthquake Name', xy=(1.02, 0.4),
                 fontweight='bold',
                 )
 
-axs[0].annotate('p(M|D)', xy=(0.4, 0.4), 
+axs[0].annotate('Posterior Magnitude', xy=(0.3, 0.4), 
                 xycoords='axes fraction',
                 fontweight='bold',
                 )
@@ -257,18 +275,22 @@ M_sort = np.argsort(eq_df.M_mean.values)
 for i, (eq, pmdl) in enumerate(p_M_DL_dict.items()):
 
     pmd = list(p_M_D_dict.items())[i][1]
+    pml = list(p_M_L_dict.items())[i][1]
 
     axs_i = eq_df.index[M_sort][::-1].tolist().index(eq) +1
 
     #i += 1
     axs[axs_i].plot(pmdl.x, pmdl.y)
     axs[axs_i].plot(pmd.x, pmd.y, lw=1.5, linestyle='--')
+    axs[axs_i].plot(pml.x, pml.y, lw=1.5, linestyle=':')
 
     axs[axs_i].set_yticks([])
 
     axs[axs_i].annotate(eq, xy=(1.02, 0.4), xycoords='axes fraction')
 
 axs[-1].set_xlabel('Moment Magnitude')
+
+axs[-1].set_xlim([5.5, 8.5])
 
 f3.subplots_adjust(hspace=0, left=0.02, right=0.6, top=0.98, bottom=0.05)
 
