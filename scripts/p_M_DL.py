@@ -15,7 +15,7 @@ import seaborn as sns
 #sns.set_palette('dark')
 
 
-save_results = True
+save_results = False
 
 
 np.random.seed(69)
