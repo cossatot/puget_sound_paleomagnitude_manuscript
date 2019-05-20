@@ -15,7 +15,7 @@ import seaborn as sns
 #sns.set_palette('dark')
 
 
-save_results = False
+save_results = True
 
 
 np.random.seed(69)
@@ -101,6 +101,16 @@ len_d = {}
 for i, row in eq_df.iterrows():
     len_d[row.name] = np.random.uniform(row['min_length'],
                                         row['max_length'], n_iters)
+
+# calculate mean offsets and errors
+off_mean = [np.abs(eq.sample_offsets(n_iters).mean()) for eq in eq_list]
+off_err = [off_mean[i] - np.abs(eq.sample_offsets(n_iters).min()) 
+           for i, eq in enumerate(eq_list)]
+
+# calculate mean length and errors
+l_mean = eq_df[['min_length', 'max_length']].mean(axis=1)
+l_err = l_mean - eq_df.min_length
+
 
 
 # set magnitude prior p(M)
@@ -229,14 +239,6 @@ def D_from_L_wc94(L):
 f2, ax2 = plt.subplots(1, figsize=(4,4))
 
 ll = np.array([0.01, 200.])
-
-off_mean = [np.abs(eq.sample_offsets(n_iters).mean()) for eq in eq_list]
-off_err = [off_mean[i] - np.abs(eq.sample_offsets(n_iters).min()) 
-           for i, eq in enumerate(eq_list)]
-
-l_mean = eq_df[['min_length', 'max_length']].mean(axis=1)
-l_err = l_mean - eq_df.min_length
-
 
 for i in range(len(eq_list)):
     ax2.errorbar(l_mean.iloc[i], off_mean[i], 

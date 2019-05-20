@@ -1,28 +1,28 @@
 fault,offset,offset_err,vert_sep,vert_sep_err,dip,dip_err,rake,rake_err,min_length,max_length,reference,M_mean,eq_name
-Seattle FZ,,,7.0,1.0,45,15,90.0,8,6,71,"Atwater 1992; Bucknam et al., 1992; Nelson et al., 2003",7.487531730767367,West_Point_Sewer_Log_Death
-SWIFZ,,,1.5,0.5,60,15,125.0,8,3,168,"Kelsey et al., 2004",7.182273693164641,SWIF_EQ2
-SWIFZ,,,1.9,1.5,55,30,125.0,8,3,168,"Sherrod et al., 2008",7.1800016999858,SWIF_EQ1
-Darrington-Devils Mtn fault,2.3,1.1,1.0,,60,20,166.0,8,33,132,"Personius et al., 2009",7.179599575905621,DDMFZ_EQ1
-Tacoma,,,3.0,1.0,55,15,90.0,8,4,52,"Sherrod et al., 2004; Johnson et al., 2004a",7.107524230994649,TFZ_EQ
-Olympia,,,2.0,1.0,45,15,125.0,8,5,74,"Sherrod, 2001",7.102306310522182,RSC5_Death
-Saddle Mountain West,2.15,0.25,,,67,10,67.5,8,12,74,"Wilson et al., 1979; Witter et al., 2008",7.068051021582424,smf_E1
-Saddle Mountain West,,,5.5,2.5,67,10,67.5,8,12,31,"Wilson et al., 1979; Witter et al., 2008; Barnett et al., 2015",7.060196582304208,smf_E3
-Vasa Park,,,1.0,0.5,26,5,90.0,8,4,71,"Sherrod, 2002",7.026021393888875,VasaParkEQ
-Bellingham coastal faults,,,2.0,1.0,45,30,90.0,8,2,64,"Kelsey et al., 2012",6.988997548260208,sandypt_eqA
-Birch Bay fault,,,1.25,0.75,45,30,90.0,8,4,66,"Kelsey et al., 2012",6.895828997170191,Birch_Bay_Uplift
-Toe Jam,,,1.2,0.6,70,10,90.0,8,6,71,"Nelson et al., 2003",6.890175460668722,SFZ_EQ_B
-Saddle Mountain West,,,1.7,0.3,67,10,67.5,8,12,31,"Barnett et al., 2015",6.886960792384318,smf_E2
-Toe Jam,1.25,0.25,1.0,,70,10,90.0,8,4,53,"Nelson et al., 2003",6.853680235925495,crane_lake_eq_1
-Waterman,,,1.4,1.0,35,15,90.0,8,2,50,"Nelson et al., 2014",6.82341384139976,SFZ_EQE
-Utsalady Pt.,,,1.5,0.5,60,30,113.5,8,2,25,"Johnson et al., 2004b",6.769740753302761,Utsalady_EQ1
-Toe Jam,,,1.0,0.5,70,10,90.0,8,4,53,"Nelson et al., 2003",6.766093698837392,crane_lake_eq_2
-Seattle FZ,,,1.5,1.4,45,15,90.0,8,4,54,"Sherrod et al., 2000",6.760034571155752,SFZ_EQ_A
-Utsalady Pt.,,,1.0,0.3,60,30,113.5,8,2,25,"Johnson et al., 2004b",6.686602585111298,Utsalady_EQ2
-Toe Jam - folding,,,0.6,0.2,70,10,90.0,8,6,71,"Nelson et al., 2003",6.680364794500059,SFZ_EQ_V
-Kendall,,,1.1,0.3,45,15,90.0,8,10,20,"Sherrod et al., 2013; ",6.671482751020896,kendall_eqA
-Lake Creek - Boundary Creek,,,0.75,0.25,55,5,67.5,8,6,29,"Nelson et al., 2007",6.663512380612741,LCBC_EQ3
-Kendall,,,1.2,0.5,45,15,90.0,8,10,20,"Barnett et al., 2007; Siedlecki and Schermer, 2007; Sherrod et al., 2013 ",6.649383315826976,kendall_EQB
-Kendall,,,0.55,0.15,45,15,90.0,8,10,20,"Barnett et al., 2007; Siedlecki and Schermer, 2007; Sherrod et al., 2013 ",6.564164804857529,kendall_EQC
-Frigid Creek,,,2.1,0.5,65,15,-90.0,8,3,6,"Blakely et al., 2009",6.492525087347832,frigid_EQ_1
-Bellingham coastal faults,,,1.0,0.5,45,30,90.0,8,2,12,"Kelsey et al., 2012",6.3872792373824385,sandypt_eqB
-Bellingham coastal faults,,,0.5,0.25,45,30,90.0,8,2,12,"Kelsey et al., 2012",6.320018622046479,Sandy_Point_EQ_C
+Seattle FZ,,,7.0,1.0,45,15,90.0,8,6,71,"Atwater 1992; Bucknam et al., 1992; Nelson et al., 2003",7.4998789062829605,West_Point_Sewer_Log_Death
+Saddle Mountain East,,,5.5,2.5,67,10,67.5,8,11,75,"Wilson et al., 1979; Witter et al., 2008; Barnett et al., 2015",7.272389674116584,smf_E3
+SWIFZ,,,1.9,1.5,55,30,125.0,8,3,170,"Sherrod et al., 2008",7.209520861407569,SWIF_EQ1
+SWIFZ,,,1.5,0.5,60,15,125.0,8,3,170,"Kelsey et al., 2004",7.192671285219768,SWIF_EQ2
+Darrington-Devils Mtn fault,2.3,1.1,1.0,,60,20,166.0,8,28,132,"Personius et al., 2009",7.172170091035488,DDMFZ_EQ1
+Olympia,,,2.0,1.0,45,15,125.0,8,5,74,"Sherrod, 2001",7.106616617613521,RSC5_Death
+Tacoma,,,3.0,1.0,55,15,90.0,8,4,52,"Sherrod et al., 2004; Johnson et al., 2004a",7.0975552318976245,TFZ_EQ
+Saddle Mountain West,2.15,0.25,,,67,10,67.5,8,12,75,"Wilson et al., 1979; Witter et al., 2008",7.073303483953855,smf_E1
+Sund Creek/ Saddle Mountains East,,,1.7,0.3,67,10,67.5,8,5,76,"Barnett et al., 2015",7.056313663162352,smf_E2
+Vasa Park,,,1.0,0.5,26,5,90.0,8,4,71,"Sherrod, 2002",7.025552367869364,VasaParkEQ
+Bellingham coastal faults,,,2.0,1.0,45,30,90.0,8,2,64,"Kelsey et al., 2012",7.000136859352786,sandypt_eqA
+Birch Bay fault,,,1.25,0.75,45,30,90.0,8,4,66,"Kelsey et al., 2012",6.896025720279171,Birch_Bay_Uplift
+Toe Jam,,,1.2,0.6,70,10,90.0,8,6,71,"Nelson et al., 2003",6.88895826989971,SFZ_EQ_B
+Waterman,,,1.4,1.0,35,15,90.0,8,2,50,"Nelson et al., 2014",6.867993383588536,SFZ_EQE
+Toe Jam,1.25,0.25,1.0,,70,10,90.0,8,4,53,"Nelson et al., 2003",6.854050033402966,crane_lake_eq_1
+Utsalady Pt.,,,1.5,0.5,60,30,113.5,8,2,25,"Johnson et al., 2004b",6.774141168701717,Utsalady_EQ1
+Seattle FZ,,,1.5,1.4,45,15,90.0,8,4,54,"Sherrod et al., 2000",6.762319724713696,SFZ_EQ_A
+Toe Jam,,,1.0,0.5,70,10,90.0,8,4,53,"Nelson et al., 2003",6.7546357422618115,crane_lake_eq_2
+Kendall,,,1.1,0.3,45,15,90.0,8,10,20,"Sherrod et al., 2013; ",6.678573785895811,kendall_eqA
+Utsalady Pt.,,,1.0,0.3,60,30,113.5,8,2,25,"Johnson et al., 2004b",6.676119451079304,Utsalady_EQ2
+Toe Jam - folding,,,0.6,0.2,70,10,90.0,8,6,71,"Nelson et al., 2003",6.6681255658347345,SFZ_EQ_V
+Lake Creek - Boundary Creek,,,0.75,0.25,55,5,67.5,8,6,29,"Nelson et al., 2007",6.66602032676476,LCBC_EQ3
+Kendall,,,1.2,0.5,45,15,90.0,8,10,20,"Barnett et al., 2007; Siedlecki and Schermer, 2007; Sherrod et al., 2013 ",6.66084936436001,kendall_EQB
+Kendall,,,0.55,0.15,45,15,90.0,8,10,20,"Barnett et al., 2007; Siedlecki and Schermer, 2007; Sherrod et al., 2013 ",6.561423114865666,kendall_EQC
+Frigid Creek,,,2.1,0.5,65,15,-90.0,8,3,6,"Blakely et al., 2009",6.538876162324492,frigid_EQ_1
+Bellingham coastal faults,,,1.0,0.5,45,30,90.0,8,2,12,"Kelsey et al., 2012",6.3993390249214475,sandypt_eqB
+Bellingham coastal faults,,,0.5,0.25,45,30,90.0,8,2,12,"Kelsey et al., 2012",6.302719046680941,Sandy_Point_EQ_C
